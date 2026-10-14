@@ -23,7 +23,7 @@ console.log({ putObjectResponse });
 
 const copyObjectCommand = new CopyObjectCommand({
   Bucket: bucket,
-  CopySource: `${bucket}/${initialPrefix}/${filename}`,
+  CopySource: encodeURI(`${bucket}/${initialPrefix}/${filename}`),
   Key: `${newPrefix}/${filename}`,
 });
 
