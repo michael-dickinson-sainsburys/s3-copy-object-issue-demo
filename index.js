@@ -4,23 +4,27 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 
-const s3Client = new S3Client({
-  region: "eu-west-1",
-});
+const bucket = "s3-copy-object-issue-demo";
+const filename = "demo-file-with-£-symbol-in-filename.txt";
+const initialPrefix = "putObject";
+const newPrefix = "copyObject";
+const region = "eu-west-1";
+
+const s3Client = new S3Client({ region });
 
 const putObjectCommand = new PutObjectCommand({
   Body: "test",
-  Bucket: "copy-object-issue-demo-bucket",
-  Key: "putObject/demo-file-with-£-symbol-in-filename.txt",
+  Bucket: bucket,
+  Key: `${initialPrefix}/${filename}`,
 });
 
 const putObjectResponse = await s3Client.send(putObjectCommand);
 console.log({ putObjectResponse });
 
 const copyObjectCommand = new CopyObjectCommand({
-  Bucket: "copy-object-issue-demo-bucket",
-  CopySource: "putObject/demo-file-with-£-symbol-in-filename.txt",
-  Key: "copyObject/demo-file-with-£-symbol-in-filename.txt",
+  Bucket: bucket,
+  CopySource: `${bucket}/${initialPrefix}/${filename}`,
+  Key: `${newPrefix}/${filename}`,
 });
 
 const copyObjectResponse = await s3Client.send(copyObjectCommand);
